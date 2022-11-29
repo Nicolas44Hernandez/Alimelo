@@ -10,12 +10,13 @@ const long RESET_DELAY_AFTER_LOST_CONNECTION = 3600000; // in ms
 
 const char* domain    = "liveobjects.orange-business.com";
 
-const char LO_MDP[]   = "86667833d73c4172acc570ad98d39b39";   // Compte Gregory
-//const char LO_MDP[]   = "b38d17399f8c4230918d45f65597b08f";   // Compte Halim
-// const char LO_MDP[]  = "3157c56f308d42edbaf26925f553dcc2";
+const char LO_MDP[]   = "100c1646e3454e1db8c535ec47cc2643";   // Compte Nicolas
+
 
 const char LO_USER[]  = "json+device";
-const char * deviceid = "urn:lo:nsid:mqtt:SmartCharger-0003";
+const char * deviceid = "urn:lo:nsid:mqtt:GreenHomeLan-0001";
+
+
 
 char apn[] = "wsiot";
 char user[] = "";
