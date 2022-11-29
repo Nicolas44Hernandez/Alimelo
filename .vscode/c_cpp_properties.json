@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\Topaze\\AppData\\Local\\Arduino15\\packages\\adafruit\\hardware\\samd\\1.2.1\\**",
+                "${workspaceFolder}/**",
+                "C:\\Program Files (x86)\\arduino-1.8.5\\libraries\\**",
+                "C:\\Users\\Topaze\\Documents\\Arduino\\libraries\\**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "USBCON"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "forcedInclude": [
+                "C:\\Users\\Topaze\\AppData\\Local\\Arduino15\\packages\\adafruit\\hardware\\samd\\1.2.1\\cores\\arduino\\Arduino.h"
+            ]
+        },
+        {
+            "name": "ArduinoIntelliSense",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
