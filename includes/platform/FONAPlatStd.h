@@ -53,8 +53,8 @@
 
 #ifdef ADAFRUIT_FONA_DEBUG
 // need to do some debugging...
-#define DEBUG_PRINT(...)		DebugStream.print(__VA_ARGS__)
-#define DEBUG_PRINTLN(...)		DebugStream.println(__VA_ARGS__)
+#define DEBUG_PRINT(...)		//DebugStream.print(__VA_ARGS__)
+#define DEBUG_PRINTLN(...)		//DebugStream.println(__VA_ARGS__)
 #endif
 
 // a few typedefs to keep things portable

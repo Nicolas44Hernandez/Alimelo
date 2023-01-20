@@ -1050,7 +1050,7 @@ boolean Adafruit_FONA::enableGPRS(boolean onoff) {
   DEBUG_PRINT(apnpassword);
       }
 
-/*      mySerial->print(F("AT+CSTT=\""));
+  /*      mySerial->print(F("AT+CSTT=\""));
       mySerial->print(apn);
       if (apnusername) {
 	mySerial->print("\",\"");
@@ -1246,8 +1246,7 @@ boolean Adafruit_FONA::TCPclose(void) {
 boolean Adafruit_FONA::TCPconnected(void) {
   if (! sendAtCommand("AT+CIPSTATUS", "OK", 100) ) return false;
   getResponse(100);
-
-  DEBUG_PRINT (F("\t<--- ")); DEBUG_PRINTLN(replybuffer);
+  // DEBUG_PRINT (F("\t<--- ")); DEBUG_PRINTLN(replybuffer);
 
   return (strcmp(replybuffer, "STATE: CONNECT OK") == 0);
 }

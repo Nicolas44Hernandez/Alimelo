@@ -31,7 +31,7 @@ void LiveObjects::begin(Object* parent)
   livebooster.powerOn();
   
   if(!livebooster.start()) 
-  {
+  { 
     Serial.println(F(">> Couldn't find Heracles <<"));
     Serial.println(F("*** Application finished ***"));
     while(true);
@@ -61,7 +61,7 @@ bool LiveObjects::connect()
     Serial.print(">> IMSI not found");
   }
 
-// avant 38 
+ // avant 38 
   livebooster.setPreferredSelection(51);
   uint8_t n = 0;
   
@@ -105,18 +105,17 @@ bool LiveObjects::connect()
   else Serial.println(F(">> GPRS connected"));
 
   // init mqtt   
-  Serial.print("MQTT setServer");
+  Serial.println("MQTT setServer");
   mqtt.setServer(domain, PORT_MQTT);
   mqtt.setCallback(mqttCallback);
   
   mqttConnect();
-
   return true;
 }
 
 bool LiveObjects::mqttConnect() {
   Serial.print("Connecting to ");
-  Serial.print(domain);
+  Serial.println(domain);
 
   if (!mqtt.connect(deviceid, LO_USER, LO_MDP)) {
     Serial.println(">> MQTT connect failed");
@@ -241,6 +240,27 @@ void LiveObjects::sendData(bool stateChanged)
 
 }
 
+
+void LiveObjects::sendCustomData(DynamicJsonDocument  data_json, String key)
+{
+  JsonObject root = data_json.as<JsonObject>();
+  StaticJsonDocument<512> doc;
+  doc["s"] = String("eff");
+  JsonObject value = doc.createNestedObject("v");
+  JsonObject orchestrator_data = value.createNestedObject(key);
+
+  for (JsonPair kv : root) {
+    String key = kv.key().c_str();
+    orchestrator_data[key] = kv.value();
+  } 
+
+  String output;
+  serializeJson(doc, output);
+  Serial.print(">> Send Custom Data <<");Serial.println(output);
+  publish(postDataTopic, output, false, NULL);
+}
+
+
 void LiveObjects::onMqttCallback(char* topic, uint8_t * payload, unsigned int len) 
 {
 	Serial.print("Message arrived :");
@@ -253,10 +273,23 @@ void LiveObjects::onMqttCallback(char* topic, uint8_t * payload, unsigned int le
   // Request: {"req":"reset","arg":{"state": true}}
   // Request: {"req":"power_off","arg":{"state": true}}
 
-  int cid = doc["cid"];
-  String reqType = doc["req"] ;
+  //Orchestrator commands
+  // Request Orchestrator status: {"req":"orchestrator","arg":{"command": false}}
 
+  int cid = doc["cid"];
+  String reqType = doc["req"];
   JsonObject arg = doc["arg"];
+
+  if(reqType.equals("orchestrator")){
+    Serial.println("***** ORCHESTRATOR COMMAND ****");
+
+    bool command = arg["command"].as<bool>();
+    orchestratorCom.manageLiveObjectsCommand(command, arg);    
+    String response = "{\"res\":{\"done\":true},\"cid\":" + String(cid) + "}";
+    publish(cmdTopicRes, response, false, NULL);
+    return;
+  }
+    
   bool state = arg["state"];
 
   String response = "{\"res\":{\"done\":true},\"cid\":" + String(cid) + "}";

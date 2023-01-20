@@ -2,7 +2,7 @@
 #define LIVE_OBJECTS_H
 
 #include <Arduino.h>
- #include "ArduinoJson.h" 
+#include "ArduinoJson.h" 
 #include "PubSubClient.h"
 #include "Adafruit_FONA.h"
 #include "Object.h"
@@ -33,6 +33,7 @@ public:
   void subscribeToTopics();
   bool publish(const char * topicArg, String output, bool alertUser, void(*callback)(void));
   void sendData(bool stateChanged);
+  void sendCustomData(DynamicJsonDocument  data, String key);
   void onMqttCallback(char* topic, uint8_t * payload, unsigned int len);
   void powerOff();
 };

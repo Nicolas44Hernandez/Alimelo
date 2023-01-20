@@ -2,6 +2,8 @@
 #include "Adafruit_INA219.h"
 #include "ArduinoLowPower.h"
 
+// TODO: review pinout variants
+
 ApplicationManager applicationManager;
 
 void resetCallback()
@@ -60,12 +62,12 @@ void ApplicationManager::init()
 
   pinMode(CHARGE_STATE, INPUT);
 
-  Serial.println("Setup Application Manager");
   liveObjects.begin(this);
+  orchestratorCom.begin(this);
   ina219.begin();
 
-  display.begin(); 
-  display.setText("hello", 0, 0, 1, SSD1306_WHITE); 
+  //  display.begin(); 
+  //  display.setText("hello", 0, 0, 1, SSD1306_WHITE); 
 
   rtc.begin(true);
   rtc.attachInterrupt(interruptAlarmTimeCallback);
@@ -98,7 +100,6 @@ void ApplicationManager::logConsumption()
   current_mA = ina219.getCurrent_mA();
   power_mW = ina219.getPower_mW();
   loadvoltage = busvoltage + (shuntvoltage / 1000);
-  
   Serial.print("Bus Voltage:   "); Serial.print(busvoltage); Serial.println(" V");
   Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage); Serial.println(" mV");
   Serial.print("Load Voltage:  "); Serial.print(loadvoltage); Serial.println(" V");
@@ -120,7 +121,7 @@ void ApplicationManager::getJsonConsumption(JsonObject& value)
   power_mW = ina219.getPower_mW();
   loadvoltage = busvoltage + (shuntvoltage / 1000);
 
-  logConsumption(); 
+  //logConsumption(); 
 
   value["bv"] = busvoltage;
   value["sw"] = shuntvoltage;
@@ -138,7 +139,7 @@ void ApplicationManager::logBatteryLevel()
 void ApplicationManager::getJsonBatteryLevel(JsonObject& value)
 {
   int batLevel = analogRead(BAT_LEVEL);
-  Serial.print("BatLevel:");Serial.println(batLevel); 
+  //Serial.print("BatLevel:");Serial.println(batLevel); 
   value["bat"] = batLevel;
 }
 
@@ -202,22 +203,23 @@ bool ApplicationManager::deviceStateChanged()
 void ApplicationManager::getJsonVinState(JsonObject& value)
 {
   bool state = electricSocketIsPowerSupplied();
-  Serial.print("VIN State: "); Serial.println(state ? "Missing" : "Present");
+  //Serial.print("VIN State: "); Serial.println(state ? "Missing" : "Present");
   value["vs"] = state;
 }
 
 void ApplicationManager::getJsonPoweredBattery(JsonObject& value)
 {
   bool state = isPowredByBattery();
-  Serial.print("Powered by battery: "); Serial.println(state ? "yes" : "no");
+  // Serial.print("Powered by battery: "); Serial.println(state ? "yes" : "no");
   value["pb"] = state;
 }
 
 void ApplicationManager::getJsonChragingBattery(JsonObject& value)
 {
   bool state = isChargingBattery();
-  Serial.print("Battery in charge: "); Serial.println(state ? "yes" : "no");
+  //Serial.print("Battery in charge: "); Serial.println(state ? "yes" : "no");
   value["ch"] = state;
+
 }
 
 void ApplicationManager::run()
@@ -227,7 +229,10 @@ void ApplicationManager::run()
     while(true)
     {
       bool state = isChargingBattery();
-      Serial.print("Battery in charge: "); Serial.println(state ? "yes" : "no");
+      //Serial.print("Battery in charge: "); Serial.println(state ? "yes" : "no");
+      //logBatteryLevel();
+      //logConsumption();
+      orchestratorCom.loop();      
       liveObjects.loop(); 
       processActionButton();
       checkPower();
@@ -239,7 +244,7 @@ void ApplicationManager::run()
 
 void ApplicationManager::checkAlarm()
 {
-  Serial.print("checkAlarm: "); Serial.println(interruptAlarmTime ? "yes" : "no");
+  //Serial.print("checkAlarm: "); Serial.println(interruptAlarmTime ? "yes" : "no");
   if((interruptAlarmTime) && (!isPowredByBattery()))
     NVIC_SystemReset();
 }
@@ -247,20 +252,20 @@ void ApplicationManager::checkAlarm()
 void ApplicationManager::checkPower()
 {
   int batLevel = analogRead(BAT_LEVEL);
-  Serial.print("BatLevel:");Serial.println(batLevel);
-  Serial.print("Powered By Battery:");Serial.println(isPowredByBattery());
+  //Serial.print("BatLevel:");Serial.println(batLevel);
+  //Serial.print("Powered By Battery:");Serial.println(isPowredByBattery());
 
   if((batLevel < BAT_THRESHOLD) && isPowredByBattery())
   {
     if(!electricSocketIsPowerSupplied())
     {
-      Serial.print("Low Power mode");
-      disableVOut(true);
-      liveObjects.powerOff();
-      LowPower.attachInterruptWakeup(VIN_STATE, resetCallback, INPUT_PULLDOWN);
+      //Serial.print("Low Power mode");
+      //disableVOut(true);
+      //liveObjects.powerOff();
+      //LowPower.attachInterruptWakeup(VIN_STATE, resetCallback, INPUT_PULLDOWN);
       delay(1000);
 
-      LowPower.deepSleep();
+      //LowPower.deepSleep();
     }
     else
     {
@@ -289,7 +294,7 @@ void ApplicationManager::switchToBattery(bool enable)
 
 bool ApplicationManager::isPowredByBattery()
 {
-  if(!electricSocketIsPowerSupplied()) return true;
+  if(!electricSocketIsPowerSupplied()) return true; 
   return (digitalRead(VIN_OFF) == HIGH);
 }
 

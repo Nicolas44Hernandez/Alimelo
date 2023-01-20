@@ -2,8 +2,10 @@
 #define APPLICATION_MANAGER_H
 
 #include <Arduino.h>
+#include "ArduinoJson.h" 
 #include "config.h"
 #include "LiveObjects.h"
+#include "OrchestratorCom.h"
 #include "Adafruit_INA219.h"
 /* #include "display.h" */
 #include "RTCZero.h"
@@ -60,6 +62,7 @@ public:
   void getJsonVinState(JsonObject& value);
   void getJsonPoweredBattery(JsonObject& value);
   void getJsonChragingBattery(JsonObject& value);
+  void getJsonDeviceState(JsonObject& value);
 
   void onAlarmTime();
   void onInterruptCallbackVinState();
@@ -68,7 +71,7 @@ public:
   void onChangeStateBattery(bool state);
   void onChangePowerVOut(bool state);
 
-  void logConsumption();
+  void logConsumption(); 
   void logBatteryLevel();
 };
 

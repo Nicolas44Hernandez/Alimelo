@@ -1,0 +1,5 @@
+#ifndef CONFIG_ORCHESTRATOR_COM_H
+#define CONFIG_ORCHESTRATOR_COM_H
+
+const long ORCHESTRATOR_NOTIFICATION_DELAY = 15000; // cycle send delay in ms 
+#endif

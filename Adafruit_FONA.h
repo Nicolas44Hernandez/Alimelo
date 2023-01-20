@@ -34,8 +34,8 @@
 #define FONA_CALL_RINGING 3
 #define FONA_CALL_INPROGRESS 4
 
-#define DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
-#define DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+//#define DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
+//#define DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 
 class Adafruit_FONA : public FONAStreamType 
 {
